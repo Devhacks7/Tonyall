@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check if the user has already completed the process
     if (localStorage.getItem('accessed') === 'true') {
-        console.log("User has already accessed the app, redirecting to main/index.html...");
-        window.location.href = 'ndex.html'; // Correct relative path
+        console.log("User has already accessed the app, redirecting to index.html...");
+        window.location.href = 'ndex.html'; // Correct file path
         return; // Ensure the rest of the script doesn't run after redirection
     }
 
@@ -54,9 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Once the timer reaches 0, redirect to the main page
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                console.log("Timer completed, redirecting to main/ndex.html...");
+                console.log("Timer completed, redirecting to main/index.html...");
                 localStorage.setItem('accessed', 'true'); // Mark as accessed to skip next time
-                window.location.href = 'ndex.html'; // Redirect to the main page (inside the 'main' folder)
+                window.location.href = 'ndex.html'; // Correct file path
             }
         }, 60000); // Update every minute
     }
