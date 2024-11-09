@@ -36,7 +36,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: -1; /* Canvas behind the content */
         }
 
         .container {
@@ -54,6 +54,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 1; /* Content in front of the canvas */
         }
 
         .title, .timer, .period, .bet {
@@ -64,21 +65,21 @@
             font-size: 30px;
             text-align: center;
             margin-bottom: 20px;
-            color: royalblue, white;
+            color: white;
         }
 
         .timer {
             font-size: 50px;
             text-align: center;
             margin-bottom: 20px;
-            color: black;
+            color: white;
         }
 
         .period {
             font-size: 20px;
             text-align: center;
             margin-bottom: 20px;
-            color: black;
+            color: white;
         }
 
         .bet {
@@ -161,7 +162,7 @@
     </style>
 </head>
 <body>
-    <canvas id="particleCanvas"></canvas>
+    <canvas id="digitalRainCanvas"></canvas>
     <div class="container">
         <div class="title">Tony 2.0</div>
         <div id="timeRemaining" class="timer">00:03</div>
@@ -181,8 +182,74 @@
         </div>
     </div>
 
+    <script>
+        const canvas = document.getElementById('digitalRainCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const columns = canvas.width / 20;  // Adjusted to make the letters more spaced out
+        const drops = [];  // Array to store the "rain" drops
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';  // Pool of characters
+
+        // Initialize the drops (one for each column)
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * canvas.height;  // Start positions at random heights
+        }
+
+        // Function to generate random character
+        function randomChar() {
+            return chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        // Function to draw the falling characters
+        function drawRain() {
+            // Add slight motion blur effect (clear past frames with a semi-transparent rectangle)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = 'cyan';  // The glowing blue color of the rain
+            ctx.font = '30px monospace';  // Larger font size for more dramatic effect
+
+            for (let i = 0; i < columns; i++) {
+                const char = randomChar();
+                const x = i * 30; // Horizontal position of the character
+                const y = drops[i]; // Vertical position of the character
+
+                // Glowing effect for the digital letters
+                ctx.shadowColor = 'cyan';
+                ctx.shadowBlur = 20;  // Glow effect
+
+                // Draw the character at (x, y)
+                ctx.fillText(char, x, y);
+
+                // Reset shadow blur for other elements
+                ctx.shadowBlur = 0;
+
+                // Update the position of the "rain" drop
+                drops[i] = drops[i] + 15; // Move the drop down by 15 pixels (adjustable speed)
+
+                // Reset drop when it reaches the bottom
+                if (drops[i] > canvas.height) {
+                    drops[i] = Math.random() * -100; // Reset drop to the top once it goes off-screen
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            drawRain();
+            requestAnimationFrame(animate);
+        }
+
+        // Start the animation
+        animate();
+    </script>
+</body>
+</html>
+
     <!-- Link to the JavaScript file -->
-    <script src="nnn.js"></script>
     
     <script>
   const popupOverlay = document.getElementById("popupOverlay");
@@ -361,4 +428,4 @@
         });
     </script>
 </body>
-    </html>
+        </html>
